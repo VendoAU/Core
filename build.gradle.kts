@@ -24,11 +24,6 @@ tasks {
             expand(project.properties)
         }
     }
-
-    wrapper {
-        gradleVersion = "7.4.2"
-        distributionType = Wrapper.DistributionType.ALL
-    }
 }
 
 java {
