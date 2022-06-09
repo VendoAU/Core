@@ -1,5 +1,6 @@
 plugins {
     java
+    `maven-publish`
 }
 
 group = "com.vendoau"
@@ -21,6 +22,25 @@ tasks {
     processResources {
         filesMatching("META-INF/extension.json") {
             expand(project.properties)
+        }
+    }
+
+    wrapper {
+        gradleVersion = "7.4.1"
+        distributionType = Wrapper.DistributionType.ALL
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
         }
     }
 }
