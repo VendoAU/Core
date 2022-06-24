@@ -14,8 +14,10 @@ repositories {
 
 dependencies {
     compileOnly("com.github.Minestom:Minestom:529_extension_improvement-SNAPSHOT")
-    compileOnly("net.kyori:adventure-text-minimessage:4.10.1")
+    compileOnly("org.spongepowered:configurate-hocon:4.1.2")
+    compileOnly("net.kyori:adventure-text-minimessage:4.11.0")
     compileOnly("net.luckperms:api:5.4")
+    compileOnly("com.google.guava:guava:31.1-jre")
 }
 
 tasks {
