@@ -2,6 +2,7 @@ package com.vendoau.core;
 
 import com.vendoau.core.commands.ExtensionsCommand;
 import com.vendoau.core.commands.GamemodeCommand;
+import com.vendoau.core.listener.BungeeMessageListener;
 import com.vendoau.core.permission.PermissionsManager;
 import com.vendoau.core.permission.PrefixManager;
 import net.kyori.adventure.text.Component;
@@ -12,7 +13,6 @@ import net.luckperms.api.model.user.User;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandManager;
 import net.minestom.server.entity.Player;
-import net.minestom.server.event.player.PlayerChatEvent;
 import net.minestom.server.extensions.Extension;
 
 public class CoreExtension extends Extension {
@@ -31,6 +31,8 @@ public class CoreExtension extends Extension {
         }
 
         instance = this;
+
+        new BungeeMessageListener();
 
         new PermissionsManager();
         prefixManager = new PrefixManager();
