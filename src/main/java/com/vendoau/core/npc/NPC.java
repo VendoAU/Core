@@ -27,6 +27,8 @@ public class NPC extends Entity {
         TeamUtil.NPC_TEAM.addMember(username);
 
         MinecraftServer.getGlobalEventHandler().addListener(PlayerEntityInteractEvent.class, event -> {
+            if (event.getHand() == Player.Hand.OFF) return;
+
             final Player player = event.getPlayer();
             final Entity target = event.getTarget();
 
