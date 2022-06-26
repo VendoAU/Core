@@ -2,9 +2,9 @@ package com.vendoau.core;
 
 import com.vendoau.core.commands.ExtensionsCommand;
 import com.vendoau.core.commands.GamemodeCommand;
-import com.vendoau.core.listener.BungeeMessageListener;
 import com.vendoau.core.permission.PermissionsManager;
 import com.vendoau.core.permission.PrefixManager;
+import com.vendoau.core.pluginmessage.BungeeMessageHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.luckperms.api.LuckPerms;
@@ -18,6 +18,7 @@ import net.minestom.server.extensions.Extension;
 public class CoreExtension extends Extension {
 
     private static CoreExtension instance;
+    private static BungeeMessageHandler bungeeMessageHandler;
 
     private LuckPerms luckPerms;
     private PrefixManager prefixManager;
@@ -31,8 +32,7 @@ public class CoreExtension extends Extension {
         }
 
         instance = this;
-
-        new BungeeMessageListener();
+        bungeeMessageHandler = new BungeeMessageHandler();
 
         new PermissionsManager();
         prefixManager = new PrefixManager();
@@ -58,6 +58,10 @@ public class CoreExtension extends Extension {
 
     public static CoreExtension get() {
         return instance;
+    }
+
+    public static BungeeMessageHandler getBungeeMessageHandler() {
+        return bungeeMessageHandler;
     }
 
     public LuckPerms getLuckPerms() {
