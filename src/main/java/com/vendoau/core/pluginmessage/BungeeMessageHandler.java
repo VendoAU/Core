@@ -49,9 +49,15 @@ public class BungeeMessageHandler {
 
                 final CompletableFuture<?> callback = callbacks.poll();
                 switch (subChannel) {
-                    case "IP", "IPOther", "ServerIP" -> {
+                    case "IP", "IPOther" -> {
                         final String ip = input.readUTF();
                         final int port = input.readInt();
+                        final InetSocketAddress address = new InetSocketAddress(ip, port);
+                        ((CompletableFuture<InetSocketAddress>) callback).complete(address);
+                    }
+                    case "ServerIP" -> {
+                        final String ip = input.readUTF();
+                        final int port = input.readUnsignedShort();
                         final InetSocketAddress address = new InetSocketAddress(ip, port);
                         ((CompletableFuture<InetSocketAddress>) callback).complete(address);
                     }
