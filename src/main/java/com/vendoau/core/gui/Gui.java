@@ -1,9 +1,9 @@
 package com.vendoau.core.gui;
 
+import com.vendoau.core.CoreExtension;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.inventory.InventoryPreClickEvent;
 import net.minestom.server.inventory.Inventory;
@@ -24,7 +24,7 @@ public abstract class Gui {
     public Gui(@NotNull Inventory inventory) {
         this.inventory = inventory;
 
-        MinecraftServer.getGlobalEventHandler().addListener(InventoryPreClickEvent.class, event -> {
+        CoreExtension.get().eventNode().addListener(InventoryPreClickEvent.class, event -> {
             final Inventory inv = event.getInventory();
             if (inv == null || !inv.equals(inventory)) return;
 

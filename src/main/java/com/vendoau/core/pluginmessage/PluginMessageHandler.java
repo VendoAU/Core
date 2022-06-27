@@ -3,7 +3,7 @@ package com.vendoau.core.pluginmessage;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import net.minestom.server.MinecraftServer;
+import com.vendoau.core.CoreExtension;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.player.PlayerPluginMessageEvent;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +17,7 @@ public abstract class PluginMessageHandler {
     private final Map<String, Queue<CompletableFuture<?>>> callbackMap = new HashMap<>();
 
     public PluginMessageHandler(String channel, @Nullable List<String> identifiedSubChannels, @Nullable List<String> unidentifiedSubChannels) {
-        MinecraftServer.getGlobalEventHandler().addListener(PlayerPluginMessageEvent.class, event -> {
+        CoreExtension.get().eventNode().addListener(PlayerPluginMessageEvent.class, event -> {
             if (!event.getIdentifier().equals(channel)) return;
 
             final ByteArrayDataInput input = ByteStreams.newDataInput(event.getMessage());

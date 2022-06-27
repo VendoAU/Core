@@ -1,8 +1,8 @@
 package com.vendoau.core.npc;
 
+import com.vendoau.core.CoreExtension;
 import com.vendoau.core.util.PacketUtil;
 import com.vendoau.core.util.TeamUtil;
-import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
@@ -26,7 +26,7 @@ public class NPC extends Entity {
         setInstance(instance, pos);
         TeamUtil.NPC_TEAM.addMember(username);
 
-        MinecraftServer.getGlobalEventHandler().addListener(PlayerEntityInteractEvent.class, event -> {
+        CoreExtension.get().eventNode().addListener(PlayerEntityInteractEvent.class, event -> {
             if (event.getHand() == Player.Hand.OFF) return;
 
             final Player player = event.getPlayer();
