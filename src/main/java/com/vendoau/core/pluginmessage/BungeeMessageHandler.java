@@ -5,81 +5,65 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
-import net.minestom.server.event.player.PlayerPluginMessageEvent;
 
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-// Inspired by https://github.com/leonardosnt/BungeeChannelApi
-public class BungeeMessageHandler {
+public class BungeeMessageHandler extends PluginMessageHandler {
 
-    private final Map<String, Queue<CompletableFuture<?>>> callbackMap = new HashMap<>();
-
-    @SuppressWarnings("unchecked")
     public BungeeMessageHandler() {
-        MinecraftServer.getGlobalEventHandler().addListener(PlayerPluginMessageEvent.class, event -> {
-            if (!event.getIdentifier().equals("bungeecord:main")) return;
+        super("bungeecord:main",
+                List.of(
+                        "IPOther",
+                        "PlayerCount",
+                        "PlayerList",
+                        "UUIDOther",
+                        "ServerIP"
+                ),
+                List.of(
+                        "IP",
+                        "GetServers",
+                        "GetServer",
+                        "UUID"
+                ));
+    }
 
-            final ByteArrayDataInput input = ByteStreams.newDataInput(event.getMessage());
-            final String subChannel = input.readUTF();
-
-            synchronized (callbackMap) {
-                Queue<CompletableFuture<?>> callbacks;
-
-                if (subChannel.equals("IPOther")
-                        || subChannel.equals("PlayerCount")
-                        || subChannel.equals("PlayerList")
-                        || subChannel.equals("UUIDOther")
-                        || subChannel.equals("ServerIP")) {
-                    final String identifier = input.readUTF(); // server/player name
-                    callbacks = callbackMap.get(subChannel + "-" + identifier);
-                } else if (subChannel.equals("IP")
-                        || subChannel.equals("GetServers")
-                        || subChannel.equals("GetServer")
-                        || subChannel.equals("UUID")) {
-                    callbacks = callbackMap.get(subChannel);
-                } else {
-                    return;
-                }
-
-                if (callbacks == null || callbacks.isEmpty()) return;
-
-                final CompletableFuture<?> callback = callbacks.poll();
-                switch (subChannel) {
-                    case "IP", "IPOther" -> {
-                        final String ip = input.readUTF();
-                        final int port = input.readInt();
-                        final InetSocketAddress address = new InetSocketAddress(ip, port);
-                        ((CompletableFuture<InetSocketAddress>) callback).complete(address);
-                    }
-                    case "ServerIP" -> {
-                        final String ip = input.readUTF();
-                        final int port = input.readUnsignedShort();
-                        final InetSocketAddress address = new InetSocketAddress(ip, port);
-                        ((CompletableFuture<InetSocketAddress>) callback).complete(address);
-                    }
-                    case "PlayerCount" -> {
-                        final int playerCount = input.readInt();
-                        ((CompletableFuture<Integer>) callback).complete(playerCount);
-                    }
-                    case "PlayerList", "GetServers" -> {
-                        final String[] strings = input.readUTF().split(", ");
-                        ((CompletableFuture<String[]>) callback).complete(strings);
-                    }
-                    case "GetServer" -> {
-                        final String server = input.readUTF();
-                        ((CompletableFuture<String>) callback).complete(server);
-                    }
-                    case "UUID", "UUIDOther" -> {
-                        final UUID uuid = UUID.fromString(input.readUTF());
-                        ((CompletableFuture<UUID>) callback).complete(uuid);
-                    }
-                }
+    @Override
+    @SuppressWarnings("unchecked")
+    void handleCallbacks(ByteArrayDataInput input, String subChannel, CompletableFuture<?> callback) {
+        switch (subChannel) {
+            case "IP", "IPOther" -> {
+                final String ip = input.readUTF();
+                final int port = input.readInt();
+                final InetSocketAddress address = new InetSocketAddress(ip, port);
+                ((CompletableFuture<InetSocketAddress>) callback).complete(address);
             }
-        });
+            case "ServerIP" -> {
+                final String ip = input.readUTF();
+                final int port = input.readUnsignedShort();
+                final InetSocketAddress address = new InetSocketAddress(ip, port);
+                ((CompletableFuture<InetSocketAddress>) callback).complete(address);
+            }
+            case "PlayerCount" -> {
+                final int playerCount = input.readInt();
+                ((CompletableFuture<Integer>) callback).complete(playerCount);
+            }
+            case "PlayerList", "GetServers" -> {
+                final String[] strings = input.readUTF().split(", ");
+                ((CompletableFuture<String[]>) callback).complete(strings);
+            }
+            case "GetServer" -> {
+                final String server = input.readUTF();
+                ((CompletableFuture<String>) callback).complete(server);
+            }
+            case "UUID", "UUIDOther" -> {
+                final UUID uuid = UUID.fromString(input.readUTF());
+                ((CompletableFuture<UUID>) callback).complete(uuid);
+            }
+        }
     }
 
     public void connect(Player player, String server) {
@@ -109,12 +93,11 @@ public class BungeeMessageHandler {
 
     public void forwardToPlayer(Player player, String playerName, String channelName, byte[] data) {
         ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF("ForwardToPlayer");
         output.writeUTF(playerName);
         output.writeUTF(channelName);
         output.writeShort(data.length);
         output.write(data);
-        player.sendPluginMessage("BungeeCord", output.toByteArray());
+        sendMessage(player, "ForwardToPlayer", output.toByteArray());
     }
 
     public CompletableFuture<InetSocketAddress> getIP(Player player) {
@@ -187,31 +170,5 @@ public class BungeeMessageHandler {
         computeCallback("ServerIP-" + server, future);
         sendStringMessage(player, "ServerIP", server);
         return future;
-    }
-
-    private void sendMessage(Player player, String subChannel, byte... message) {
-        final ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(subChannel);
-        output.write(message);
-
-        player.sendPluginMessage("BungeeCord", output.toByteArray());
-    }
-
-    private void sendStringMessage(Player player, String subChannel, String... message) {
-        final ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF(subChannel);
-        Arrays.stream(message).forEach(output::writeUTF);
-
-        player.sendPluginMessage("BungeeCord", output.toByteArray());
-    }
-
-    private void computeCallback(String key, CompletableFuture<?> future) {
-        synchronized (callbackMap) {
-            callbackMap.compute(key, (s, futures) -> {
-                if (futures == null) futures = new ArrayDeque<>();
-                futures.add(future);
-                return futures;
-            });
-        }
     }
 }
