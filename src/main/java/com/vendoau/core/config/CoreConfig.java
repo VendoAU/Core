@@ -20,9 +20,9 @@ public class CoreConfig {
             ConfigUtil.merge(loader, config, core, "/core.conf");
 
             serverName = config.node("serverName").getString();
-            redisIP = config.node("redis.ip").getString();
-            redisPort = config.node("redis.port").getInt();
-            redisPassword = config.node("redis.password").getString();
+            redisIP = config.node("redis").node("ip").getString();
+            redisPort = config.node("redis").node("port").getInt();
+            redisPassword = config.node("redis").node("password").getString();
         } catch (ConfigurateException e) {
             core.logger().error("An error occurred while trying to read the config");
             e.printStackTrace();
