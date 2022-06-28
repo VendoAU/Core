@@ -2,6 +2,7 @@ package com.vendoau.core;
 
 import com.vendoau.core.commands.ExtensionsCommand;
 import com.vendoau.core.commands.GamemodeCommand;
+import com.vendoau.core.config.CoreConfig;
 import com.vendoau.core.permission.PermissionsManager;
 import com.vendoau.core.permission.PrefixManager;
 import com.vendoau.core.pluginmessage.BungeeMessageHandler;
@@ -18,6 +19,7 @@ import net.minestom.server.extensions.Extension;
 public class CoreExtension extends Extension {
 
     private static CoreExtension instance;
+    private static CoreConfig config;
     private static BungeeMessageHandler bungeeMessageHandler;
 
     private LuckPerms luckPerms;
@@ -32,6 +34,7 @@ public class CoreExtension extends Extension {
         }
 
         instance = this;
+        config = new CoreConfig(this);
         bungeeMessageHandler = new BungeeMessageHandler();
 
         new PermissionsManager();
@@ -58,6 +61,10 @@ public class CoreExtension extends Extension {
 
     public static CoreExtension get() {
         return instance;
+    }
+
+    public static CoreConfig getConfig() {
+        return config;
     }
 
     public static BungeeMessageHandler getBungeeMessageHandler() {
