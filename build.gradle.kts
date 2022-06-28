@@ -18,6 +18,7 @@ dependencies {
     compileOnly("net.kyori:adventure-text-minimessage:4.11.0")
     compileOnly("net.luckperms:api:5.4")
     compileOnly("com.google.guava:guava:31.1-jre")
+    compileOnly("redis.clients:jedis:4.2.3")
 }
 
 tasks {
