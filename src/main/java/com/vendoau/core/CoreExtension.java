@@ -6,6 +6,7 @@ import com.vendoau.core.config.CoreConfig;
 import com.vendoau.core.permission.PermissionsManager;
 import com.vendoau.core.permission.PrefixManager;
 import com.vendoau.core.pluginmessage.BungeeMessageHandler;
+import com.vendoau.core.util.RedisUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.luckperms.api.LuckPerms;
@@ -47,12 +48,16 @@ public class CoreExtension extends Extension {
         commandManager.register(new ExtensionsCommand());
         commandManager.register(new GamemodeCommand());
 
+        RedisUtil.publishServerStatus(true);
+        RedisUtil.publishPlayerCount();
+
         return LoadStatus.SUCCESS;
     }
 
     @Override
     public void terminate() {
-
+        RedisUtil.publishServerStatus(false);
+        RedisUtil.publishPlayerCount(0);
     }
 
     public User getUser(Player player) {
