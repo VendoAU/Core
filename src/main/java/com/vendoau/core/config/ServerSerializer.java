@@ -9,7 +9,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 
-public class ServerSerializer implements TypeSerializer<Server> {
+public final class ServerSerializer implements TypeSerializer<Server> {
 
     public static final ServerSerializer INSTANCE = new ServerSerializer();
 

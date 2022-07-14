@@ -16,6 +16,13 @@ public final class PosSerializer implements TypeSerializer<Pos> {
 
     @Override
     public Pos deserialize(Type type, ConfigurationNode source) {
+        if (source.childrenMap().isEmpty()) {
+            return deserializeShortVersion(source);
+        }
+        return deserializeLongVersion(source);
+    }
+
+    private Pos deserializeShortVersion(ConfigurationNode source) {
         final String[] split = source.getString().split(",");
 
         if (split.length != 3 && split.length != 5) {
@@ -32,20 +39,26 @@ public final class PosSerializer implements TypeSerializer<Pos> {
         return new Pos(x, y, z, yaw, pitch);
     }
 
+    private Pos deserializeLongVersion(ConfigurationNode source) {
+        final double x = source.node("x").getDouble();
+        final double y = source.node("y").getDouble();
+        final double z = source.node("z").getDouble();
+        final float yaw = source.node("yaw").getFloat();
+        final float pitch = source.node("pitch").getFloat();
+        return new Pos(x, y, z, yaw, pitch);
+    }
+
     @Override
     public void serialize(Type type, @Nullable Pos pos, ConfigurationNode target) throws SerializationException {
         if (pos == null) {
-            target.raw(null);
+            target.set(null);
             return;
         }
 
-        final String[] split = new String[5];
-        split[0] = String.valueOf(pos.x());
-        split[1] = String.valueOf(pos.y());
-        split[2] = String.valueOf(pos.z());
-        split[3] = String.valueOf(pos.yaw());
-        split[4] = String.valueOf(pos.pitch());
-
-        target.set(String.join(", ", split));
+        target.node("x").set(pos.x());
+        target.node("y").set(pos.y());
+        target.node("z").set(pos.z());
+        target.node("yaw").set(pos.yaw());
+        target.node("pitch").set(pos.pitch());
     }
 }
