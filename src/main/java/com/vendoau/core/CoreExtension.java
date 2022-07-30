@@ -25,9 +25,9 @@ public class CoreExtension extends Extension {
     private static CoreExtension instance;
     private static CoreConfig config;
     private static BungeeMessageHandler bungeeMessageHandler;
+    private static PrefixManager prefixManager;
 
     private LuckPerms luckPerms;
-    private PrefixManager prefixManager;
 
     @Override
     public LoadStatus initialize() {
@@ -85,11 +85,11 @@ public class CoreExtension extends Extension {
         return bungeeMessageHandler;
     }
 
-    public LuckPerms getLuckPerms() {
-        return luckPerms;
+    public static PrefixManager getPrefixManager() {
+        return prefixManager;
     }
 
-    public PrefixManager getPrefixManager() {
-        return prefixManager;
+    public LuckPerms getLuckPerms() {
+        return luckPerms;
     }
 }
