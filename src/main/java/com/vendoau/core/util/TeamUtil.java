@@ -4,7 +4,9 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.network.packet.server.play.TeamsPacket;
 import net.minestom.server.scoreboard.Team;
 
-public class TeamUtil {
+public final class TeamUtil {
+
+    private TeamUtil() {}
 
     public static final Team NPC_TEAM;
 

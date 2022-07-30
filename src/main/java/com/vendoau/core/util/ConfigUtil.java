@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 
-public class ConfigUtil {
+public final class ConfigUtil {
+
+    private ConfigUtil() {}
 
     public static HoconConfigurationLoader getLoader(Path path) {
         return HoconConfigurationLoader.builder()

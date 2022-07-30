@@ -2,7 +2,9 @@ package com.vendoau.core.util;
 
 import net.minestom.server.inventory.InventoryType;
 
-public class InventoryUtil {
+public final class InventoryUtil {
+
+    private InventoryUtil() {}
 
     public static InventoryType getInventoryTypeFromSize(int size) {
         if (size < 10) return InventoryType.CHEST_1_ROW;

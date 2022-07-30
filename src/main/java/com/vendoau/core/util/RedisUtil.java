@@ -9,7 +9,9 @@ import redis.clients.jedis.JedisPubSub;
 
 import java.util.function.Consumer;
 
-public class RedisUtil {
+public final class RedisUtil {
+
+    public RedisUtil() {}
 
     public static void publishPlayerCount(int count) {
         final JsonObject playerCountObject = new JsonObject();

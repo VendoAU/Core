@@ -4,7 +4,9 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.utils.NamespaceID;
 import net.minestom.server.world.DimensionType;
 
-public class InstanceUtil {
+public final class InstanceUtil {
+
+    private InstanceUtil() {}
 
     public static final DimensionType BRIGHT_DIMENSION;
 

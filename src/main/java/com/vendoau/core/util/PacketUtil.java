@@ -10,7 +10,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class PacketUtil {
+public final class PacketUtil {
+
+    private PacketUtil() {}
 
     public static PlayerInfoPacket addPlayerInfoPacket(UUID uuid, String username, @Nullable PlayerSkin skin) {
         final List<PlayerInfoPacket.AddPlayer.Property> properties = new ArrayList<>();

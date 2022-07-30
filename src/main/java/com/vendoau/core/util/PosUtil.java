@@ -2,7 +2,9 @@ package com.vendoau.core.util;
 
 import net.minestom.server.coordinate.Pos;
 
-public class PosUtil {
+public final class PosUtil {
+
+    private PosUtil() {}
 
     public static Pos getPos(String s) {
         final String[] split = s.split(",");
