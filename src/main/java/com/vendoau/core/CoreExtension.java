@@ -2,6 +2,8 @@ package com.vendoau.core;
 
 import com.vendoau.core.commands.ExtensionsCommand;
 import com.vendoau.core.commands.GamemodeCommand;
+import com.vendoau.core.commands.HurtCommand;
+import com.vendoau.core.commands.KillCommand;
 import com.vendoau.core.config.CoreConfig;
 import com.vendoau.core.permission.PermissionsManager;
 import com.vendoau.core.permission.PrefixManager;
@@ -47,6 +49,8 @@ public class CoreExtension extends Extension {
         });
         commandManager.register(new ExtensionsCommand());
         commandManager.register(new GamemodeCommand());
+        commandManager.register(new HurtCommand());
+        commandManager.register(new KillCommand());
 
         RedisUtil.publishServerStatus(true);
         RedisUtil.publishPlayerCount();
