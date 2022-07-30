@@ -5,6 +5,7 @@ import com.vendoau.core.commands.GamemodeCommand;
 import com.vendoau.core.commands.HurtCommand;
 import com.vendoau.core.commands.KillCommand;
 import com.vendoau.core.config.CoreConfig;
+import com.vendoau.core.listener.EntityPreDeathListener;
 import com.vendoau.core.permission.PermissionsManager;
 import com.vendoau.core.permission.PrefixManager;
 import com.vendoau.core.pluginmessage.BungeeMessageHandler;
@@ -43,6 +44,10 @@ public class CoreExtension extends Extension {
         new PermissionsManager();
         prefixManager = new PrefixManager();
 
+        // Listeners
+        new EntityPreDeathListener(this);
+
+        // Commands
         final CommandManager commandManager = MinecraftServer.getCommandManager();
         commandManager.setUnknownCommandCallback((sender, command) -> {
             sender.sendMessage(Component.text("Unknown command", NamedTextColor.RED));
