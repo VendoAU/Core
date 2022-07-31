@@ -1,6 +1,7 @@
 package com.vendoau.core.permission;
 
 import com.vendoau.core.CoreExtension;
+import com.vendoau.core.util.PermissionsUtil;
 import com.vendoau.core.util.TeamUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -20,7 +21,7 @@ public class PrefixManager {
         // Name tag and scoreboard
         CoreExtension.get().eventNode().addListener(PlayerLoginEvent.class, event -> {
             final Player player = event.getPlayer();
-            final User user = CoreExtension.get().getUser(player);
+            final User user = PermissionsUtil.getUser(player);
 
             final Team team = TeamUtil.getOrCreateTeam(user.getCachedData().getMetaData().getPrimaryGroup());
             team.setPrefix(MiniMessage.miniMessage().deserialize(user.getCachedData().getMetaData().getPrefix()));
@@ -33,7 +34,7 @@ public class PrefixManager {
         // Chat
         CoreExtension.get().eventNode().addListener(PlayerChatEvent.class, event -> {
             final Player player = event.getPlayer();
-            final User user = CoreExtension.get().getUser(player);
+            final User user = PermissionsUtil.getUser(player);
 
             final Component prefix = MiniMessage.miniMessage().deserialize(user.getCachedData().getMetaData().getPrefix());
             final Component name = prefix.append(Component.text(player.getUsername(), NamedTextColor.WHITE));
@@ -47,8 +48,7 @@ public class PrefixManager {
     }
 
     private void showPrefix(Player player) {
-        final User user = CoreExtension.get().getUser(player);
-
+        final User user = PermissionsUtil.getUser(player);
         final Team team = TeamUtil.getOrCreateTeam(user.getPrimaryGroup());
         player.setTeam(team);
     }

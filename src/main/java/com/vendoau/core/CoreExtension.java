@@ -12,12 +12,8 @@ import com.vendoau.core.pluginmessage.BungeeMessageHandler;
 import com.vendoau.core.util.RedisUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.LuckPermsProvider;
-import net.luckperms.api.model.user.User;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandManager;
-import net.minestom.server.entity.Player;
 import net.minestom.server.extensions.Extension;
 
 public class CoreExtension extends Extension {
@@ -27,16 +23,8 @@ public class CoreExtension extends Extension {
     private static BungeeMessageHandler bungeeMessageHandler;
     private static PrefixManager prefixManager;
 
-    private LuckPerms luckPerms;
-
     @Override
     public LoadStatus initialize() {
-        try {
-            luckPerms = LuckPermsProvider.get();
-        } catch (IllegalStateException e) {
-            return LoadStatus.FAILED;
-        }
-
         instance = this;
         config = new CoreConfig(this);
         bungeeMessageHandler = new BungeeMessageHandler();
@@ -69,10 +57,6 @@ public class CoreExtension extends Extension {
         RedisUtil.publishPlayerCount(0);
     }
 
-    public User getUser(Player player) {
-        return luckPerms.getPlayerAdapter(Player.class).getUser(player);
-    }
-
     public static CoreExtension get() {
         return instance;
     }
@@ -87,9 +71,5 @@ public class CoreExtension extends Extension {
 
     public static PrefixManager getPrefixManager() {
         return prefixManager;
-    }
-
-    public LuckPerms getLuckPerms() {
-        return luckPerms;
     }
 }
