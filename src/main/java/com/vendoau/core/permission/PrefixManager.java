@@ -1,6 +1,7 @@
 package com.vendoau.core.permission;
 
 import com.vendoau.core.CoreExtension;
+import com.vendoau.core.util.TeamUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -10,7 +11,6 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.event.player.PlayerChatEvent;
 import net.minestom.server.event.player.PlayerLoginEvent;
 import net.minestom.server.scoreboard.Team;
-import net.minestom.server.scoreboard.TeamManager;
 
 public class PrefixManager {
 
@@ -22,7 +22,7 @@ public class PrefixManager {
             final Player player = event.getPlayer();
             final User user = CoreExtension.get().getUser(player);
 
-            final Team team = getOrCreateTeam(user.getCachedData().getMetaData().getPrimaryGroup());
+            final Team team = TeamUtil.getOrCreateTeam(user.getCachedData().getMetaData().getPrimaryGroup());
             team.setPrefix(MiniMessage.miniMessage().deserialize(user.getCachedData().getMetaData().getPrefix()));
 
             if (!show) return;
@@ -46,22 +46,10 @@ public class PrefixManager {
         });
     }
 
-    // TODO: Move to Library
-    public static Team getOrCreateTeam(String name) {
-        final TeamManager teamManager = MinecraftServer.getTeamManager();
-
-        Team team = teamManager.getTeam(name);
-        if (team == null) {
-            team = teamManager.createTeam(name);
-        }
-
-        return team;
-    }
-
     private void showPrefix(Player player) {
         final User user = CoreExtension.get().getUser(player);
 
-        final Team team = getOrCreateTeam(user.getPrimaryGroup());
+        final Team team = TeamUtil.getOrCreateTeam(user.getPrimaryGroup());
         player.setTeam(team);
     }
 
