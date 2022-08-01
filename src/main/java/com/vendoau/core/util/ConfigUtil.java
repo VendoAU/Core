@@ -46,6 +46,10 @@ public final class ConfigUtil {
         return getLoader(getExtensionConfigPath(extension));
     }
 
+    public static HoconConfigurationLoader getLoader(Extension extension, String path) {
+        return getLoader(extension.dataDirectory().resolve(path));
+    }
+
     public static CommentedConfigurationNode getConfig(Path path) throws ConfigurateException {
         return getLoader(path).load();
     }
@@ -56,6 +60,10 @@ public final class ConfigUtil {
 
     public static CommentedConfigurationNode getConfig(Extension extension) throws ConfigurateException {
         return getLoader(extension).load();
+    }
+
+    public static CommentedConfigurationNode getConfig(Extension extension, String path) throws ConfigurateException {
+        return getLoader(extension, path).load();
     }
 
     public static void merge(HoconConfigurationLoader loader, CommentedConfigurationNode config, Extension extension, String resource) throws ConfigurateException {
