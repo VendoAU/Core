@@ -14,6 +14,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandManager;
+import net.minestom.server.event.player.PlayerDisconnectEvent;
+import net.minestom.server.event.player.PlayerLoginEvent;
 import net.minestom.server.extensions.Extension;
 
 public class CoreExtension extends Extension {
@@ -45,8 +47,14 @@ public class CoreExtension extends Extension {
         commandManager.register(new HurtCommand());
         commandManager.register(new KillCommand());
 
+        // Publish redis stuff
         RedisUtil.publishServerStatus(true);
         RedisUtil.publishPlayerCount();
+        eventNode().addListener(PlayerLoginEvent.class, event -> {
+            RedisUtil.publishPlayerCount();
+        }).addListener(PlayerDisconnectEvent.class, event -> {
+            RedisUtil.publishPlayerCount();
+        });
 
         return LoadStatus.SUCCESS;
     }
