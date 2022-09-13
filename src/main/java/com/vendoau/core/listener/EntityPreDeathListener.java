@@ -13,7 +13,7 @@ public final class EntityPreDeathListener {
             final LivingEntity entity = event.getEntity();
             final float damage = event.getDamage();
 
-            if (entity.getHealth() >= damage) {
+            if (entity.getHealth() <= damage) {
                 EntityPreDeathEvent entityPreDeathEvent = new EntityPreDeathEvent(entity, event.getDamageType(), damage);
                 EventDispatcher.callCancellable(entityPreDeathEvent, () -> event.setCancelled(true));
             }
