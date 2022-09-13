@@ -1,6 +1,9 @@
 {
   "entrypoint": "com.vendoau.core.CoreExtension",
   "name": "Core",
+  "authors": [
+    "VendoAU"
+  ],
   "version": "${project.version}",
   "dependencies": [
     "LuckPerms"
