@@ -23,8 +23,11 @@ public class PrefixManager {
             final Player player = event.getPlayer();
             final User user = PermissionsUtil.getUser(player);
 
+            final String prefix = user.getCachedData().getMetaData().getPrefix();
+            if (prefix == null) return;
+
             final Team team = TeamUtil.getOrCreateTeam(user.getCachedData().getMetaData().getPrimaryGroup());
-            team.setPrefix(MiniMessage.miniMessage().deserialize(user.getCachedData().getMetaData().getPrefix()));
+            team.setPrefix(MiniMessage.miniMessage().deserialize(prefix));
 
             if (!show) return;
 
@@ -36,10 +39,12 @@ public class PrefixManager {
             final Player player = event.getPlayer();
             final User user = PermissionsUtil.getUser(player);
 
-            final Component prefix = MiniMessage.miniMessage().deserialize(user.getCachedData().getMetaData().getPrefix());
-            final Component name = prefix.append(Component.text(player.getUsername(), NamedTextColor.WHITE));
+            final String prefix = user.getCachedData().getMetaData().getPrefix();
+            if (prefix == null) return;
+
             final Component format = Component.text()
-                    .append(name)
+                    .append(MiniMessage.miniMessage().deserialize(prefix))
+                    .append(Component.text(player.getUsername(), NamedTextColor.WHITE))
                     .append(Component.text(": ", NamedTextColor.GRAY))
                     .append(Component.text(event.getMessage()))
                     .build();
