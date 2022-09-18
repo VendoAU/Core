@@ -1,14 +1,12 @@
 package com.vendoau.core;
 
-import com.vendoau.core.commands.ExtensionsCommand;
-import com.vendoau.core.commands.GamemodeCommand;
-import com.vendoau.core.commands.HurtCommand;
-import com.vendoau.core.commands.KillCommand;
+import com.vendoau.core.commands.*;
 import com.vendoau.core.config.CoreConfig;
 import com.vendoau.core.listener.EntityPreDeathListener;
 import com.vendoau.core.permission.PermissionsManager;
 import com.vendoau.core.permission.PrefixManager;
 import com.vendoau.core.pluginmessage.BungeeMessageHandler;
+import com.vendoau.core.trigger.TriggerManager;
 import com.vendoau.core.util.RedisUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -24,6 +22,7 @@ public class CoreExtension extends Extension {
     private static CoreConfig config;
     private static BungeeMessageHandler bungeeMessageHandler;
     private static PrefixManager prefixManager;
+    private static TriggerManager triggerManager;
 
     @Override
     public LoadStatus initialize() {
@@ -33,6 +32,8 @@ public class CoreExtension extends Extension {
 
         new PermissionsManager();
         prefixManager = new PrefixManager();
+
+        triggerManager = new TriggerManager();
 
         // Listeners
         new EntityPreDeathListener(this);
@@ -46,6 +47,7 @@ public class CoreExtension extends Extension {
         commandManager.register(new GamemodeCommand());
         commandManager.register(new HurtCommand());
         commandManager.register(new KillCommand());
+        commandManager.register(new ShowTriggersCommand());
 
         // Publish redis stuff
         RedisUtil.publishServerStatus(true);
@@ -79,5 +81,9 @@ public class CoreExtension extends Extension {
 
     public static PrefixManager getPrefixManager() {
         return prefixManager;
+    }
+
+    public static TriggerManager getTriggerManager() {
+        return triggerManager;
     }
 }
