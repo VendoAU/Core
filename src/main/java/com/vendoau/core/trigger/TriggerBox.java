@@ -2,36 +2,49 @@ package com.vendoau.core.trigger;
 
 import com.mattworzala.debug.shape.Box;
 import com.mattworzala.debug.shape.Shape;
-import net.minestom.server.collision.BoundingBox;
-import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Player;
 import net.minestom.server.extensions.Extension;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public abstract class TriggerBox extends Trigger {
+public class TriggerBox extends Trigger {
 
-    private final Point src;
-    private final BoundingBox boundingBox;
+    private final List<BetterBox> boxes;
 
-    public TriggerBox(Extension extension, String name, Point src, BoundingBox boundingBox) {
+    public TriggerBox(Extension extension, String name, BetterBox box) {
         super(extension, name);
-        this.src = src;
-        this.boundingBox = boundingBox;
+        this.boxes = Collections.singletonList(box);
+    }
+
+    public TriggerBox(Extension extension, String name, List<BetterBox> boxes) {
+        super(extension, name);
+        this.boxes = boxes;
     }
 
     @Override
-    protected boolean isInside(Player player) {
-        return boundingBox.intersectEntity(src, player);
+    public boolean isInside(Player player) {
+        for (BetterBox box : boxes) {
+            if (box.boundingBox().intersectEntity(box.src(), player)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
-    public Shape getDebugShape() {
-        return new Box.Builder()
-                .start(Vec.fromPoint(src.add(boundingBox.relativeStart())))
-                .end(Vec.fromPoint(src.add(boundingBox.relativeEnd())))
-                .color(new Color(255, 165, 0, 85).getRGB())
-                .build();
+    protected List<Shape> getDebugShapes() {
+        final List<Shape> shapes = new ArrayList<>();
+        for (BetterBox box : boxes) {
+            shapes.add(new Box.Builder()
+                    .start(Vec.fromPoint(box.src().add(box.boundingBox().relativeStart())))
+                    .end(Vec.fromPoint(box.src().add(box.boundingBox().relativeEnd())))
+                    .color(new Color(255, 165, 0, 85).getRGB())
+                    .build());
+        }
+        return shapes;
     }
 }

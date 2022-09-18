@@ -6,18 +6,17 @@ import com.vendoau.core.CoreExtension;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.player.PlayerMoveEvent;
 import net.minestom.server.extensions.Extension;
-import net.minestom.server.utils.NamespaceID;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Trigger {
 
-    private final NamespaceID id;
+    private final String id;
     protected final List<Player> players = new ArrayList<>();
 
-    public Trigger(Extension extension, String name) {
-        id = NamespaceID.from(name);
+    public Trigger(Extension extension, String id) {
+        this.id = id;
 
         extension.eventNode().addListener(PlayerMoveEvent.class, event -> {
             final Player player = event.getPlayer();
@@ -36,25 +35,27 @@ public abstract class Trigger {
         CoreExtension.getTriggerManager().add(this);
     }
 
-    protected abstract boolean isInside(Player player);
+    public abstract boolean isInside(Player player);
 
-    protected abstract void onEnter(Player player);
+    protected abstract List<Shape> getDebugShapes();
 
-    protected abstract void onExit(Player player);
+    protected void onEnter(Player player) {}
 
-    public abstract Shape getDebugShape();
+    protected void onExit(Player player) {}
 
     public final void showDebug(Player player) {
-        final DebugMessage debugMessage = DebugMessage.builder()
-                .set(id, getDebugShape())
-                .build();
-        player.sendPacket(debugMessage.getPacket());
+        final DebugMessage.Builder debugMessageBuilder = DebugMessage.builder();
+        for (int i = 0; i < getDebugShapes().size(); i++) {
+            debugMessageBuilder.set(id + "_" + i, getDebugShapes().get(i));
+        }
+        player.sendPacket(debugMessageBuilder.build().getPacket());
     }
 
     public final void hideDebug(Player player) {
-        final DebugMessage debugMessage = DebugMessage.builder()
-                .remove(id)
-                .build();
-        player.sendPacket(debugMessage.getPacket());
+        final DebugMessage.Builder debugMessageBuilder = DebugMessage.builder();
+        for (int i = 0; i < getDebugShapes().size(); i++) {
+            debugMessageBuilder.remove(id + "_" + i);
+        }
+        player.sendPacket(debugMessageBuilder.build().getPacket());
     }
 }
