@@ -20,7 +20,7 @@ public final class PacketUtil {
             properties.add(new PlayerInfoPacket.AddPlayer.Property("textures", skin.textures(), skin.signature()));
         }
 
-        final PlayerInfoPacket.AddPlayer playerEntry = new PlayerInfoPacket.AddPlayer(uuid, username, properties, GameMode.CREATIVE, 0, null);
+        final PlayerInfoPacket.AddPlayer playerEntry = new PlayerInfoPacket.AddPlayer(uuid, username, properties, GameMode.CREATIVE, 0, null, null);
         return new PlayerInfoPacket(PlayerInfoPacket.Action.ADD_PLAYER, Collections.singletonList(playerEntry));
     }
 
