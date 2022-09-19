@@ -14,4 +14,9 @@ public final class TextUtil {
     public static void messageAllPlayers(String message) {
         messageAllPlayers(Component.text(message));
     }
+
+    public static String makePlural(int amount, String s) {
+        if (amount == 1) return s;
+        return s + "s";
+    }
 }
