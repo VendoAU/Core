@@ -1,6 +1,6 @@
 package com.vendoau.core.trigger;
 
-import com.mattworzala.debug.shape.Box;
+import com.mattworzala.debug.shape.OutlineBox;
 import com.mattworzala.debug.shape.Shape;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Player;
@@ -39,10 +39,11 @@ public class TriggerBox extends Trigger {
     protected List<Shape> getDebugShapes() {
         final List<Shape> shapes = new ArrayList<>();
         for (BetterBox box : boxes) {
-            shapes.add(new Box.Builder()
-                    .start(Vec.fromPoint(box.src().add(box.boundingBox().relativeStart())))
-                    .end(Vec.fromPoint(box.src().add(box.boundingBox().relativeEnd())))
+            shapes.add(new OutlineBox.Builder()
+                    .start(Vec.fromPoint(box.pos1()))
+                    .end(Vec.fromPoint(box.pos2()))
                     .color(new Color(255, 165, 0, 85).getRGB())
+                    .text(id)
                     .build());
         }
         return shapes;

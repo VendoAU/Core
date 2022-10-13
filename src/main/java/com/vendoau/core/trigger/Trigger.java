@@ -12,7 +12,7 @@ import java.util.List;
 
 public abstract class Trigger {
 
-    private final String id;
+    protected final String id;
     protected final List<Player> players = new ArrayList<>();
 
     public Trigger(Extension extension, String id) {

@@ -19,7 +19,7 @@ dependencies {
     compileOnly("net.luckperms:api:5.4")
     compileOnly("com.google.guava:guava:31.1-jre")
     compileOnly("redis.clients:jedis:4.2.3")
-    compileOnly("com.github.mworzala.mc_debug_renderer:minestom:3ed4c6e975")
+    compileOnly("com.github.mworzala.mc_debug_renderer:minestom:1daee829ac")
 }
 
 tasks {
