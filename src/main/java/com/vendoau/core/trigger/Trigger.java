@@ -37,25 +37,19 @@ public abstract class Trigger {
 
     public abstract boolean isInside(Player player);
 
-    protected abstract List<Shape> getDebugShapes();
+    protected abstract Shape getDebugShape();
 
     protected void onEnter(Player player) {}
 
     protected void onExit(Player player) {}
 
     public final void showDebug(Player player) {
-        final DebugMessage.Builder debugMessageBuilder = DebugMessage.builder();
-        for (int i = 0; i < getDebugShapes().size(); i++) {
-            debugMessageBuilder.set(id + "_" + i, getDebugShapes().get(i));
-        }
-        player.sendPacket(debugMessageBuilder.build().getPacket());
+        final DebugMessage debugMessage = DebugMessage.builder().set(id, getDebugShape()).build();
+        player.sendPacket(debugMessage.getPacket());
     }
 
     public final void hideDebug(Player player) {
-        final DebugMessage.Builder debugMessageBuilder = DebugMessage.builder();
-        for (int i = 0; i < getDebugShapes().size(); i++) {
-            debugMessageBuilder.remove(id + "_" + i);
-        }
-        player.sendPacket(debugMessageBuilder.build().getPacket());
+        final DebugMessage debugMessage = DebugMessage.builder().remove(id).build();
+        player.sendPacket(debugMessage.getPacket());
     }
 }
