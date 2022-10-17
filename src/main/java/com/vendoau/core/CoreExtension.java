@@ -6,6 +6,7 @@ import com.vendoau.core.listener.EntityPreDeathListener;
 import com.vendoau.core.permission.PermissionsManager;
 import com.vendoau.core.permission.PrefixManager;
 import com.vendoau.core.pluginmessage.BungeeMessageHandler;
+import com.vendoau.core.selection.SelectionTool;
 import com.vendoau.core.trigger.TriggerManager;
 import com.vendoau.core.util.RedisUtil;
 import net.kyori.adventure.text.Component;
@@ -23,6 +24,7 @@ public class CoreExtension extends Extension {
     private static BungeeMessageHandler bungeeMessageHandler;
     private static PrefixManager prefixManager;
     private static TriggerManager triggerManager;
+    private static SelectionTool selectionTool;
 
     @Override
     public LoadStatus initialize() {
@@ -34,6 +36,7 @@ public class CoreExtension extends Extension {
         prefixManager = new PrefixManager();
 
         triggerManager = new TriggerManager();
+        selectionTool = new SelectionTool();
 
         // Listeners
         new EntityPreDeathListener(this);
@@ -47,6 +50,7 @@ public class CoreExtension extends Extension {
         commandManager.register(new GamemodeCommand());
         commandManager.register(new HurtCommand());
         commandManager.register(new KillCommand());
+        commandManager.register(new SelectionCommand());
         commandManager.register(new ShowTriggersCommand());
 
         // Publish redis stuff
@@ -85,5 +89,9 @@ public class CoreExtension extends Extension {
 
     public static TriggerManager getTriggerManager() {
         return triggerManager;
+    }
+
+    public static SelectionTool getSelectionTool() {
+        return selectionTool;
     }
 }
